@@ -31,6 +31,30 @@
     <!-- isi card -->
 </div>
 
+<!-- 🔍 🔥 TARUH SEARCH DI SINI -->
+<form method="GET" action="{{ url('/') }}" class="mb-4 flex gap-2">
+
+    <input 
+        type="text" 
+        name="search" 
+        value="{{ $search }}" 
+        placeholder="Cari nomor / pengirim / perihal..."
+        class="w-full border rounded px-4 py-2 focus:ring focus:ring-blue-300">
+
+    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Cari
+    </button>
+
+    @if($search)
+        <a href="{{ url('/') }}" 
+           class="bg-gray-400 text-white px-4 py-2 rounded">
+            Reset
+        </a>
+    @endif
+
+</form>
+
+
 <!-- 🔥 TARUH TABEL GABUNGAN DI SINI -->
 <div class="bg-white shadow-xl rounded-2xl p-8 mt-6">
 
@@ -47,6 +71,7 @@
                     <th class="px-6 py-4">Pengirim / Tujuan</th>
                     <th class="px-6 py-4">Tanggal</th>
                     <th class="px-6 py-4">Jenis</th>
+                    <th class="px-6 py-4">Aksi</th>
                 </tr>
             </thead>
 
@@ -83,6 +108,19 @@
                         @endif
                     </td>
 
+                    <td>
+                        @if($item->jenis == 'Masuk')
+                            <a href="{{ route('surat-masuk.show', $item->id) }}"
+                                class="bg-green-500 text-white px-3 py-1 rounded">
+                                Lihat
+                            </a>
+                        @else
+                            <a href="{{ route('surat-keluar.show', $item->id) }}"
+                                class="bg-blue-500 text-white px-3 py-1 rounded">
+                                Lihat
+                            </a>
+                        @endif
+                    </td>
                 </tr>
                 @empty
                 <tr>
@@ -99,8 +137,8 @@
 
         <!-- Previous -->
         @if($page > 1)
-            <a href="?page={{ $page - 1 }}" 
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <a href="?page={{ $page - 1 }}&search={{ $search }}" 
+            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                 ← Previous
             </a>
         @else
@@ -109,18 +147,18 @@
 
         <!-- Info -->
         <span class="text-gray-600 font-semibold">
-            Halaman {{ $page }} dari {{ ceil($total / $perPage) }}
+            Halaman {{ $page }}
         </span>
 
         <!-- Next -->
         @if($page * $perPage < $total)
-            <a href="?page={{ $page + 1 }}" 
+            <a href="?page={{ $page + 1 }}&search={{ $search }}" 
                 class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Next →
             </a>
         @endif
 
-    </div>
+</div>
 
 </div>
 

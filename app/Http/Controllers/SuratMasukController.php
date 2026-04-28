@@ -13,6 +13,8 @@ class SuratMasukController extends Controller
         return view('surat_masuk.index', compact('data'));
     }
 
+    
+
     public function create()
     {
         return view('surat_masuk.create');
