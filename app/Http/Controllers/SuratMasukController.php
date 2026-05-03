@@ -86,7 +86,18 @@ class SuratMasukController extends Controller
     {
         $data = SuratMasuk::findOrFail($id);
 
-        // Hapus file dari folder uploads jika ada
+        // Simpan ke arsip sebelum dihapus
+        \App\Models\Arsip::create([
+            'nomor_surat'   => $data->nomor_surat,
+            'jenis'         => 'Masuk',
+            'kontak'        => $data->pengirim,
+            'perihal'       => $data->perihal,
+            'tanggal_surat' => $data->tanggal_surat,
+            'file'          => $data->file,
+            'surat_id'      => $data->id,
+        ]);
+
+        // Hapus file dari folder uploads
         if ($data->file) {
             $filePath = public_path('uploads/' . $data->file);
             if (file_exists($filePath)) {

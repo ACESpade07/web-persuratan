@@ -80,6 +80,20 @@
                         Surat Keluar
                     </a>
                 </li>
+                <li>
+                    <a href="/arsip"
+                    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors
+                            {{ request()->is('arsip*') ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900' }}">
+
+                        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.4">
+                            <rect x="2" y="5" width="12" height="9" rx="1.5"/>
+                            <path d="M5 5V3.5A1.5 1.5 0 016.5 2h3A1.5 1.5 0 0111 3.5V5" stroke-linecap="round"/>
+                            <path d="M6 9h4M6 11.5h2" stroke-linecap="round"/>
+                        </svg>
+
+                        Arsip
+                    </a>
+                </li>
             </ul>
         </nav>
 
