@@ -59,14 +59,43 @@ class SuratKeluarController extends Controller
         ]);
 
         $data = SuratKeluar::findOrFail($id);
-        $data->update($request->all());
+
+        // Jika ada file baru, hapus file lama lalu simpan yang baru
+        if ($request->hasFile('file')) {
+            if ($data->file) {
+                $fileLama = public_path('uploads/' . $data->file);
+                if (file_exists($fileLama)) {
+                    unlink($fileLama);
+                }
+            }
+            $namaFile = time() . '_' . $request->file('file')->getClientOriginalName();
+            $request->file('file')->move(public_path('uploads'), $namaFile);
+            $data->file = $namaFile;
+        }
+
+        $data->tujuan        = $request->tujuan;
+        $data->nomor_surat   = $request->nomor_surat;
+        $data->tanggal_surat = $request->tanggal_surat;
+        $data->perihal       = $request->perihal;
+        $data->save();
 
         return redirect()->route('surat-keluar.index');
     }
 
     public function destroy($id)
     {
-        SuratKeluar::destroy($id);
+        $data = SuratKeluar::findOrFail($id);
+
+        // Hapus file dari folder uploads jika ada
+        if ($data->file) {
+            $filePath = public_path('uploads/' . $data->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        $data->delete();
+
         return redirect()->route('surat-keluar.index');
     }
 

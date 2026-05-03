@@ -59,16 +59,47 @@ class SuratMasukController extends Controller
         ]);
 
         $data = SuratMasuk::findOrFail($id);
-        $data->update($request->all());
+
+        // Jika ada file baru, hapus file lama lalu simpan yang baru
+        if ($request->hasFile('file')) {
+            if ($data->file) {
+                $fileLama = public_path('uploads/' . $data->file);
+                if (file_exists($fileLama)) {
+                    unlink($fileLama);
+                }
+            }
+            $namaFile = time() . '_' . $request->file('file')->getClientOriginalName();
+            $request->file('file')->move(public_path('uploads'), $namaFile);
+            $data->file = $namaFile;
+        }
+
+        $data->pengirim      = $request->pengirim;
+        $data->nomor_surat   = $request->nomor_surat;
+        $data->tanggal_surat = $request->tanggal_surat;
+        $data->perihal       = $request->perihal;
+        $data->save();
 
         return redirect()->route('surat-masuk.index');
     }
 
     public function destroy($id)
     {
-        SuratMasuk::destroy($id);
+        $data = SuratMasuk::findOrFail($id);
+
+        // Hapus file dari folder uploads jika ada
+        if ($data->file) {
+            $filePath = public_path('uploads/' . $data->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        $data->delete();
+
         return redirect()->route('surat-masuk.index');
     }
+
+    
 
     // ── Helper ────────────────────────────────────────────────
     private function generateNomorSurat(): string
