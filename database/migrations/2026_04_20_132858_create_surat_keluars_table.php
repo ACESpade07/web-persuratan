@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('surat_keluars', function (Blueprint $table) {
             $table->id();
             $table->string('nomor_surat');
-            $table->string('pengirim');
+            $table->string('tujuan');
             $table->date('tanggal_surat');
             $table->string('perihal');
             $table->string('file')->nullable();

@@ -2,163 +2,176 @@
 
 @section('content')
 
-<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+<div style="padding: 1.5rem 0;">
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-
-    <!-- Surat Masuk -->
-    <div class="bg-green-500 text-white p-6 rounded-xl shadow">
-        <h2 class="text-lg">Surat Masuk</h2>
-        <p class="text-3xl font-bold mt-2">{{ $totalMasuk }}</p>
+    {{-- Header --}}
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-medium text-gray-900">Dashboard</h1>
+        <span class="text-sm text-gray-500">Sistem Manajemen Surat</span>
     </div>
 
-    <!-- Surat Keluar -->
-    <div class="bg-blue-500 text-white p-6 rounded-xl shadow">
-        <h2 class="text-lg">Surat Keluar</h2>
-        <p class="text-3xl font-bold mt-2">{{ $totalKeluar }}</p>
+    {{-- Stat Cards --}}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+
+        <div class="bg-gray-50 rounded-lg p-4">
+            <p class="text-sm text-gray-500 mb-1">Surat Masuk</p>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="text-2xl font-medium text-gray-900">{{ $totalMasuk }}</span>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4">
+            <p class="text-sm text-gray-500 mb-1">Surat Keluar</p>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span class="text-2xl font-medium text-gray-900">{{ $totalKeluar }}</span>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4">
+            <p class="text-sm text-gray-500 mb-1">Total Surat</p>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                <span class="text-2xl font-medium text-gray-900">{{ $totalSemua }}</span>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Total Surat -->
-    <div class="bg-gray-700 text-white p-6 rounded-xl shadow">
-        <h2 class="text-lg">Total Surat</h2>
-        <p class="text-3xl font-bold mt-2">{{ $totalSemua }}</p>
-    </div>
+    {{-- Search Bar --}}
+    <form method="GET" action="{{ url('/') }}" class="flex flex-wrap gap-2 mb-5">
+        <input
+            type="text"
+            name="search"
+            value="{{ $search }}"
+            placeholder="Cari nomor / pengirim / perihal..."
+            class="flex-1 min-w-[200px] border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
 
-</div>
+        <button type="submit"
+            class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Cari
+        </button>
 
-<!-- 🔷 CARD STATISTIK -->
-<div class="grid grid-cols-3 gap-4 mb-6">
-    <!-- isi card -->
-</div>
-
-<!-- 🔍 🔥 TARUH SEARCH DI SINI -->
-<form method="GET" action="{{ url('/') }}" class="mb-4 flex gap-2">
-
-    <input 
-        type="text" 
-        name="search" 
-        value="{{ $search }}" 
-        placeholder="Cari nomor / pengirim / perihal..."
-        class="w-full border rounded px-4 py-2 focus:ring focus:ring-blue-300">
-
-    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Cari
-    </button>
-
-    @if($search)
-        <a href="{{ url('/') }}" 
-           class="bg-gray-400 text-white px-4 py-2 rounded">
-            Reset
-        </a>
-    @endif
-
-</form>
-
-
-<!-- 🔥 TARUH TABEL GABUNGAN DI SINI -->
-<div class="bg-white shadow-xl rounded-2xl p-8 mt-6">
-
-    <h2 class="text-2xl font-bold mb-6">Semua Surat</h2>
-
-    <div class="overflow-x-auto">
-        <table class="min-w-full text-base border border-gray-200 rounded-lg overflow-hidden">
-
-            <!-- HEADER -->
-            <thead class="bg-blue-900 text-white">
-                <tr class="text-lg">
-                    <th class="px-6 py-4">No</th>
-                    <th class="px-6 py-4">Nomor Surat</th>
-                    <th class="px-6 py-4">Pengirim / Tujuan</th>
-                    <th class="px-6 py-4">Tanggal</th>
-                    <th class="px-6 py-4">Jenis</th>
-                    <th class="px-6 py-4">Aksi</th>
-                </tr>
-            </thead>
-
-            <!-- BODY -->
-            <tbody>
-                @forelse($dataGabungan as $item)
-                <tr class="border-t text-center hover:bg-gray-100 transition">
-
-                    <td class="px-6 py-4 font-medium">
-                        {{ $loop->iteration }}
-                    </td>
-
-                    <td class="px-6 py-4 font-semibold text-blue-700">
-                        {{ $item->nomor_surat }}
-                    </td>
-
-                    <td class="px-6 py-4">
-                        {{ $item->kontak ?? $item->pengirim ?? $item->tujuan }}
-                    </td>
-
-                    <td class="px-6 py-4">
-                        {{ $item->tanggal_surat }}
-                    </td>
-
-                    <td class="px-6 py-4">
-                        @if($item->jenis == 'Masuk')
-                            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                                Masuk
-                            </span>
-                        @else
-                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">
-                                Keluar
-                            </span>
-                        @endif
-                    </td>
-
-                    <td>
-                        @if($item->jenis == 'Masuk')
-                            <a href="{{ route('surat-masuk.show', $item->id) }}"
-                                class="bg-green-500 text-white px-3 py-1 rounded">
-                                Lihat
-                            </a>
-                        @else
-                            <a href="{{ route('surat-keluar.show', $item->id) }}"
-                                class="bg-blue-500 text-white px-3 py-1 rounded">
-                                Lihat
-                            </a>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center py-6 text-gray-500 text-lg">
-                        Tidak ada data
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-
-        </table>
-    </div>
-    <div class="flex justify-between items-center mt-6">
-
-        <!-- Previous -->
-        @if($page > 1)
-            <a href="?page={{ $page - 1 }}&search={{ $search }}" 
-            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                ← Previous
-            </a>
-        @else
-            <span></span>
-        @endif
-
-        <!-- Info -->
-        <span class="text-gray-600 font-semibold">
-            Halaman {{ $page }}
-        </span>
-
-        <!-- Next -->
-        @if($page * $perPage < $total)
-            <a href="?page={{ $page + 1 }}&search={{ $search }}" 
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Next →
+        @if($search)
+            <a href="{{ url('/') }}"
+               class="px-4 py-2 text-sm border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50 transition">
+                Reset
             </a>
         @endif
+    </form>
 
-</div>
+    {{-- Tabel --}}
+    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-gray-100">
+            <p class="text-base font-medium text-gray-900">Semua Surat</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm" style="table-layout: fixed;">
+                <colgroup>
+                    <col style="width: 50px;">
+                    <col style="width: 150px;">
+                    <col>
+                    <col style="width: 120px;">
+                    <col style="width: 100px;">
+                    <col style="width: 90px;">
+                </colgroup>
+
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+                    <tr>
+                        <th class="px-5 py-3 text-center font-medium">No</th>
+                        <th class="px-5 py-3 text-left font-medium">Nomor Surat</th>
+                        <th class="px-5 py-3 text-left font-medium">Pengirim / Tujuan</th>
+                        <th class="px-5 py-3 text-left font-medium">Tanggal</th>
+                        <th class="px-5 py-3 text-center font-medium">Jenis</th>
+                        <th class="px-5 py-3 text-center font-medium">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($dataGabungan as $item)
+                    <tr class="hover:bg-gray-50 transition-colors">
+
+                        <td class="px-5 py-3 text-center text-gray-400 text-xs">
+                            {{ $loop->iteration }}
+                        </td>
+
+                        <td class="px-5 py-3 font-medium text-blue-600 truncate">
+                            {{ $item->nomor_surat }}
+                        </td>
+
+                        <td class="px-5 py-3 text-gray-700 truncate">
+                            {{ $item->kontak ?? $item->pengirim ?? $item->tujuan }}
+                        </td>
+
+                        <td class="px-5 py-3 text-gray-500 text-xs">
+                            {{ $item->tanggal_surat }}
+                        </td>
+
+                        <td class="px-5 py-3 text-center">
+                            @if($item->jenis == 'Masuk')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+                                    Masuk
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                                    Keluar
+                                </span>
+                            @endif
+                        </td>
+
+                        <td class="px-5 py-3 text-center">
+                            @if($item->jenis == 'Masuk')
+                                <a href="{{ route('surat-masuk.show', $item->id) }}"
+                                   class="text-xs font-medium text-emerald-600 hover:underline">
+                                    Lihat
+                                </a>
+                            @else
+                                <a href="{{ route('surat-keluar.show', $item->id) }}"
+                                   class="text-xs font-medium text-blue-600 hover:underline">
+                                    Lihat
+                                </a>
+                            @endif
+                        </td>
+
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center py-10 text-gray-400 text-sm">
+                            Tidak ada data
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pagination --}}
+        <div class="flex items-center justify-between px-5 py-3 border-t border-gray-100">
+
+            @if($page > 1)
+                <a href="?page={{ $page - 1 }}&search={{ $search }}"
+                   class="text-sm text-gray-600 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition">
+                    ← Previous
+                </a>
+            @else
+                <span></span>
+            @endif
+
+            <span class="text-sm text-gray-500">Halaman {{ $page }}</span>
+
+            @if($page * $perPage < $total)
+                <a href="?page={{ $page + 1 }}&search={{ $search }}"
+                   class="text-sm text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                    Next →
+                </a>
+            @endif
+
+        </div>
+
+    </div>
 
 </div>
 
